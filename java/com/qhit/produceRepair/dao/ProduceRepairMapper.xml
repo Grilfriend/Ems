@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.produceRepair.dao.IProduceRepairDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.produceRepair.pojo.ProduceRepair"> 
+		<id property="repairid" column="repairid" javaType="java.lang.Integer"></id> 
+		<result property="devid" column="devid" javaType="java.lang.Integer"></result> 
+		<result property="cause" column="cause" javaType="java.lang.String"></result> 
+		<result property="cost" column="cost" javaType="java.lang.Integer"></result> 
+		<result property="repairdate" column="repairdate" javaType="java.lang.String"></result> 
+	</resultMap>
+
+	<resultMap id="search" type="com.qhit.produceRepair.pojo.ProduceRepair">
+		<id property="repairid" column="repairid" javaType="java.lang.Integer"></id>
+		<result property="devid" column="devid" javaType="java.lang.Integer"></result>
+		<result property="cause" column="cause" javaType="java.lang.String"></result>
+		<result property="cost" column="cost" javaType="java.lang.Integer"></result>
+		<result property="repairdate" column="repairdate" javaType="java.lang.String"></result>
+		<result property="devname" column="devname" javaType="java.lang.String"></result>
+	</resultMap>
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		repairid,devid,cause,cost,repairdate 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_repair 
+		where repairid = #{repairid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from produce_repair 
+		where repairid = #{repairid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.produceRepair.pojo.ProduceRepair" > 
+		insert into produce_repair(devid,cause,cost,repairdate) 
+		values (#{devid},#{cause},#{cost},#{repairdate}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.produceRepair.pojo.ProduceRepair" > 
+		update produce_repair 
+		<set > 
+			<if test="devid != null and devid!='' " > 
+				devid = #{devid}, 
+			</if> 
+			<if test="cause != null and cause!='' " > 
+				cause = #{cause}, 
+			</if> 
+			<if test="cost != null and cost!='' " > 
+				cost = #{cost}, 
+			</if> 
+			<if test="repairdate != null and repairdate!='' " > 
+				repairdate = #{repairdate}, 
+			</if> 
+		</set> 
+		where repairid = #{repairid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.produceRepair.pojo.ProduceRepair" > 
+		update produce_repair 
+		set  devid = #{devid}, cause = #{cause}, cost = #{cost}, repairdate = #{repairdate} 
+		where repairid = #{repairid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" >
+		select * from  produce_repair
+		<where >
+			<if test="devid != null and devid!='' " >
+				and devid = #{devid}
+			</if>
+			<if test="cause != null and cause!='' " >
+				and cause = #{cause}
+			</if>
+			<if test="cost != null and cost!='' " >
+				and cost = #{cost}
+			</if>
+			<if test="repairdate != null and repairdate!='' " >
+				and repairdate = #{repairdate}
+			</if>
+		</where>
+	</select> 
+	<select id="findByDevid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_repair 
+		where devid = #{devid} 
+	</select> 
+	<select id="findByCause" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_repair 
+		where cause = #{cause} 
+	</select> 
+	<select id="findByCost" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_repair 
+		where cost = #{cost} 
+	</select> 
+	<select id="findByRepairdate" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_repair 
+		where repairdate = #{repairdate} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from produce_repair where repairid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.produceRepair.pojo.ProduceRepair" resultMap="search">
+       SELECT pr.*,bd.devname
+        FROM produce_repair pr LEFT JOIN base_device bd ON bd.devid=pr.devid
+		<where >
+			<if test="devid != null and devid!='' " >
+				and devid = #{devid}
+			</if>
+			<if test="cause != null and cause!='' " >
+				and cause = #{cause}
+			</if>
+			<if test="cost != null and cost!='' " >
+				and cost = #{cost}
+			</if>
+			<if test="repairdate != null and repairdate!='' " >
+				and repairdate = #{repairdate}
+			</if>
+		</where>
+	</select>
+</mapper> 

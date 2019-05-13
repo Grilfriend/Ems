@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.baseFlow.dao.IBaseFlowDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.baseFlow.pojo.BaseFlow"> 
+		<id property="flowid" column="flowid" javaType="java.lang.Integer"></id> 
+		<result property="flowname" column="flowname" javaType="java.lang.String"></result> 
+		<result property="dljid" column="dljid" javaType="java.lang.Integer"></result> 
+		<result property="zcjid" column="zcjid" javaType="java.lang.Integer"></result> 
+		<result property="pdjid" column="pdjid" javaType="java.lang.Integer"></result> 
+		<result property="compid" column="compid" javaType="java.lang.Integer"></result> 
+	</resultMap>
+
+	<resultMap id="selects" type="com.qhit.baseFlow.pojo.BaseFlow">
+		<id property="flowid" column="flowid" javaType="java.lang.Integer"></id>
+		<result property="flowname" column="flowname" javaType="java.lang.String"></result>
+		<result property="dljid" column="dljid" javaType="java.lang.Integer"></result>
+		<result property="zcjid" column="zcjid" javaType="java.lang.Integer"></result>
+		<result property="pdjid" column="pdjid" javaType="java.lang.Integer"></result>
+		<result property="dljname" column="dljname" javaType="java.lang.String"></result>
+		<result property="compid" column="compid" javaType="java.lang.Integer"></result>
+		<result property="zcjname" column="zcjname" javaType="java.lang.String"></result>
+		<result property="pdjname" column="pdjname" javaType="java.lang.String"></result>
+		<result property="compname" column="compname" javaType="java.lang.String"></result>
+	</resultMap>
+
+	<resultMap id="flowamount" type="com.qhit.baseFlow.pojo.BaseFlow">
+		<id property="flowid" column="flowid" javaType="java.lang.Integer"></id>
+		<result property="flowname" column="flowname" javaType="java.lang.String"></result>
+		<result property="capacity" column="capacity" javaType="java.lang.Float"></result>
+	</resultMap>
+
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		flowid,flowname,dljid,zcjid,pdjid,compid 
+	</sql> 
+	<select id="findById" resultMap="selects" parameterType="java.lang.Integer" >
+		SELECT bf.*,db1.devname AS dljname,db2.devname AS zcjname,db3.devname AS pdjname  FROM base_flow bf LEFT JOIN base_device db1 ON bf.dljid=db1.devid
+LEFT JOIN base_device db2 ON bf.zcjid=db2.devid
+LEFT JOIN base_device db3 ON bf.pdjid=db3.devid
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from base_flow 
+		where flowid = #{flowid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.baseFlow.pojo.BaseFlow" > 
+		insert into base_flow(flowname,dljid,zcjid,pdjid,compid) 
+		values (#{flowname},#{dljid},#{zcjid},#{pdjid},#{compid}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.baseFlow.pojo.BaseFlow" > 
+		update base_flow 
+		<set > 
+			<if test="flowname != null and flowname!='' " > 
+				flowname = #{flowname}, 
+			</if> 
+			<if test="dljid != null and dljid!='' " > 
+				dljid = #{dljid}, 
+			</if> 
+			<if test="zcjid != null and zcjid!='' " > 
+				zcjid = #{zcjid}, 
+			</if> 
+			<if test="pdjid != null and pdjid!='' " > 
+				pdjid = #{pdjid}, 
+			</if> 
+			<if test="compid != null and compid!='' " > 
+				compid = #{compid}, 
+			</if> 
+		</set> 
+		where flowid = #{flowid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.baseFlow.pojo.BaseFlow" > 
+		update base_flow 
+		set  flowname = #{flowname}, dljid = #{dljid}, zcjid = #{zcjid}, pdjid = #{pdjid}, compid = #{compid} 
+		where flowid = #{flowid} 
+	</update> 
+	<select id="findAll"   resultMap="selects" >
+	SELECT bf.*,db1.typename AS dljname,db2.typename AS zcjname,db3.typename AS pdjname,bc.compname  FROM base_flow bf LEFT JOIN base_devtype db1 ON bf.dljid=db1.typeid
+LEFT JOIN base_devtype db2 ON bf.zcjid=db2.typeid
+LEFT JOIN base_devtype db3 ON bf.pdjid=db3.typeid
+LEFT JOIN base_company bc ON bf.compid=bc.compid
+	</select> 
+	<select id="findByFlowname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_flow 
+		where flowname = #{flowname} 
+	</select> 
+	<select id="findByDljid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_flow 
+		where dljid = #{dljid} 
+	</select> 
+	<select id="findByZcjid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_flow 
+		where zcjid = #{zcjid} 
+	</select> 
+	<select id="findByPdjid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_flow 
+		where pdjid = #{pdjid} 
+	</select>
+	<select id="findByCompid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_flow 
+		where compid = #{compid} 
+	</select> 
+
+	<select id="search" parameterType="com.qhit.baseFlow.pojo.BaseFlow" resultMap="selects">
+	SELECT bf.*,db1.devname AS dljname,db2.devname AS zcjname,db3.devname AS pdjname,bc.compname  FROM base_flow bf LEFT JOIN base_device db1 ON bf.dljid=db1.devid
+LEFT JOIN base_device db2 ON bf.zcjid=db2.devid
+LEFT JOIN base_device db3 ON bf.pdjid=db3.devid
+LEFT JOIN base_company bc ON bf.compid=bc.compid
+	</select>
+
+
+	<select id="flowamount" parameterType="java.util.Map" resultType="java.util.Map">
+SELECT bf.flowname AS flow,SUM(pr.capacity) AS amount,bf.flowid
+FROM base_flow bf LEFT JOIN produce_report pr ON bf.flowid=pr.flowid
+WHERE YEAR(pr.completetime) = '${year}'
+AND bf.compid='${compid}'
+GROUP BY bf.flowid
+	</select>
+
+	<select id="findflowennger" parameterType="java.util.Map" resultType="java.util.Map">
+		  SELECT bf.flowname,SUM(ec.electric),SUM(ec.water),SUM(ec.oil)
+        FROM base_flow bf
+        LEFT JOIN produce_report pr ON bf.flowid=pr.flowid
+        LEFT JOIN energy_consume ec ON pr.reportid=ec.reportid
+        WHERE bf.compid='${compid}'
+        AND YEAR(pr.completetime)='${year}'
+        GROUP BY bf.flowname
+	</select>
+
+
+</mapper> 

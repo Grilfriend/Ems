@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.produceReport.dao.IProduceReportDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.produceReport.pojo.ProduceReport"> 
+		<id property="reportid" column="reportid" javaType="java.lang.Integer"></id> 
+		<result property="shipname" column="shipname" javaType="java.lang.String"></result> 
+		<result property="capacity" column="capacity" javaType="java.lang.Float"></result> 
+		<result property="planjobtime" column="planjobtime" javaType="java.lang.String"></result> 
+		<result property="startjobtime" column="startjobtime" javaType="java.lang.String"></result> 
+		<result property="completetime" column="completetime" javaType="java.lang.String"></result> 
+		<result property="flowid" column="flowid" javaType="java.lang.Integer"></result> 
+		<result property="reportuser" column="reportuser" javaType="java.lang.String"></result> 
+		<result property="compid" column="compid" javaType="java.lang.Integer"></result>
+		<result property="amount" column="amount" javaType="java.lang.Float"></result>
+	</resultMap>
+
+	<resultMap id="list" type="com.qhit.produceReport.pojo.ProduceReport">
+		<id property="reportid" column="reportid" javaType="java.lang.Integer"></id>
+		<result property="shipname" column="shipname" javaType="java.lang.String"></result>
+		<result property="capacity" column="capacity" javaType="java.lang.Float"></result>
+		<result property="planjobtime" column="planjobtime" javaType="java.lang.String"></result>
+		<result property="startjobtime" column="startjobtime" javaType="java.lang.String"></result>
+		<result property="completetime" column="completetime" javaType="java.lang.String"></result>
+		<result property="flowid" column="flowid" javaType="java.lang.Integer"></result>
+		<result property="reportuser" column="reportuser" javaType="java.lang.String"></result>
+		<result property="compid" column="compid" javaType="java.lang.Integer"></result>
+		<result property="compname" column="compname" javaType="java.lang.String"></result>
+		<result property="flowname" column="flowname" javaType="java.lang.String"></result>
+	</resultMap>
+
+
+	<resultMap id="findyear" type="com.qhit.produceReport.pojo.ProduceReport">
+		<id property="reportid" column="reportid" javaType="java.lang.Integer"></id>
+		<result property="shipname" column="shipname" javaType="java.lang.String"></result>
+		<result property="capacity" column="capacity" javaType="java.lang.Float"></result>
+		<result property="planjobtime" column="planjobtime" javaType="java.lang.String"></result>
+		<result property="startjobtime" column="startjobtime" javaType="java.lang.String"></result>
+		<result property="completetime" column="completetime" javaType="java.lang.String"></result>
+		<result property="flowid" column="flowid" javaType="java.lang.Integer"></result>
+		<result property="reportuser" column="reportuser" javaType="java.lang.String"></result>
+		<result property="compid" column="compid" javaType="java.lang.Integer"></result>
+		<association property="baseCompany" column="baseCompany" javaType="com.qhit.baseCompany.pojo.BaseCompany">
+			<id property="compid" column="compid" javaType="java.lang.Integer"></id>
+			<result property="compname" column="compname" javaType="java.lang.String"></result>
+			<result property="contacts" column="contacts" javaType="java.lang.String"></result>
+			<result property="comptel" column="comptel" javaType="java.lang.String"></result>
+			<result property="industry" column="industry" javaType="java.lang.String"></result>
+			<result property="address" column="address" javaType="java.lang.String"></result>
+		</association>
+	</resultMap>
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		reportid,shipname,capacity,planjobtime,startjobtime,completetime,flowid,reportuser,compid 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where reportid = #{reportid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from produce_report 
+		where reportid = #{reportid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.produceReport.pojo.ProduceReport" > 
+		insert into produce_report(shipname,capacity,planjobtime,startjobtime,completetime,flowid,reportuser,compid) 
+		values (#{shipname},#{capacity},#{planjobtime},#{startjobtime},#{completetime},#{flowid},#{reportuser},#{compid}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.produceReport.pojo.ProduceReport" >
+		update produce_report 
+		<set > 
+			<if test="shipname != null and shipname!='' " > 
+				shipname = #{shipname}, 
+			</if> 
+			<if test="capacity != null and capacity!='' " > 
+				capacity = #{capacity}, 
+			</if> 
+			<if test="planjobtime != null and planjobtime!='' " > 
+				planjobtime = #{planjobtime}, 
+			</if> 
+			<if test="startjobtime != null and startjobtime!='' " > 
+				startjobtime = #{startjobtime}, 
+			</if> 
+			<if test="completetime != null and completetime!='' " > 
+				completetime = #{completetime}, 
+			</if> 
+			<if test="flowid != null and flowid!='' " > 
+				flowid = #{flowid}, 
+			</if> 
+			<if test="reportuser != null and reportuser!='' " > 
+				reportuser = #{reportuser}, 
+			</if> 
+			<if test="compid != null and compid!='' " > 
+				compid = #{compid}, 
+			</if> 
+		</set> 
+		where reportid = #{reportid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.produceReport.pojo.ProduceReport" > 
+		update produce_report 
+		set  shipname = #{shipname}, capacity = #{capacity}, planjobtime = #{planjobtime}, startjobtime = #{startjobtime}, completetime = #{completetime}, flowid = #{flowid}, reportuser = #{reportuser}, compid = #{compid} 
+		where reportid = #{reportid} 
+	</update> 
+	<select id="findAll" resultMap="list" >
+		SELECT pr.*,bf.flowname,bc.compname
+FROM produce_report pr LEFT JOIN base_flow bf ON pr.flowid=bf.flowid
+LEFT JOIN base_company bc ON pr.compid=bc.compid
+	</select>
+	<select id="findByShipname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where shipname = #{shipname} 
+	</select> 
+	<select id="findByCapacity" resultMap="BaseResultMap" parameterType="java.lang.Float" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where capacity = #{capacity} 
+	</select> 
+	<select id="findByPlanjobtime" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where planjobtime = #{planjobtime} 
+	</select> 
+	<select id="findByStartjobtime" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where startjobtime = #{startjobtime} 
+	</select> 
+	<select id="findByCompletetime" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where completetime = #{completetime} 
+	</select> 
+	<select id="findByFlowid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where flowid = #{flowid} 
+	</select> 
+	<select id="findByReportuser" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where reportuser = #{reportuser} 
+	</select> 
+	<select id="findByCompid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from produce_report 
+		where compid = #{compid} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from produce_report where reportid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.produceReport.pojo.ProduceReport" resultMap="list">
+		SELECT pr.*,bf.flowname,bc.compname
+		FROM produce_report pr LEFT JOIN base_flow bf ON pr.flowid=bf.flowid
+		LEFT JOIN base_company bc ON pr.compid=bc.compid
+		<where >
+			<if test="shipname != null and shipname!='' " >
+				 and shipname = #{shipname}
+			</if>
+			<if test="capacity != null and capacity!='' " >
+				 and capacity = #{capacity}
+			</if>
+			<if test="planjobtime != null and planjobtime!='' " >
+				 and planjobtime = #{planjobtime}
+			</if>
+			<if test="startjobtime != null and startjobtime!='' " >
+				 and startjobtime = #{startjobtime}
+			</if>
+			<if test="completetime != null and completetime!='' " >
+				 and completetime = #{completetime}
+			</if>
+			<if test="flowid != null and flowid!='' " >
+				 and flowid = #{flowid}
+			</if>
+			<if test="reportuser != null and reportuser!='' " >
+				 and reportuser = #{reportuser}
+			</if>
+			<if test="compid != null and compid!='' " >
+				 and compid = #{compid}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectFlowAmount" parameterType="java.util.Map" resultType="java.util.Map">
+		select  m.月份,
+		<foreach collection="flows"  item="item" separator=",">
+			MAX(CASE m.flowname WHEN '${item.flowname}' THEN m.jobamount ELSE 0 END ) '${item.flowname}'
+		</foreach>
+		from  (select concat(month(pr.completetime),'月') as '月份',bf.flowname,sum(pr.capacity) as jobamount
+		from produce_report pr join base_flow bf on pr.flowid=bf.flowid
+		where year(pr.completetime) = '${year}'
+		group by bf.flowname,month(pr.completetime) )m
+		group by m.月份
+		order by  cast(replace(m.月份,'月','') as signed)
+	</select>
+
+	<select id="selectDevTypeAmount" parameterType="java.util.Map" resultType="java.util.Map">
+		select  m.月份,
+		<foreach collection="devTypeList"  item="item" separator=",">
+			MAX(CASE m.typename WHEN '${item.typename}' THEN m.jobamount ELSE 0 END ) '${item.typename}'
+		</foreach>
+		from  (select concat(month(pj.completetime),'月') as '月份',bt.typename,sum(amount) as jobamount
+		from produce_job pj join base_device bd on pj.devid=bd.devid
+		join base_devtype bt on bd.typeid=bt.typeid
+		where year(pj.completetime) = '${year}'
+		group by month(pj.completetime),bt.typename )m
+		group by m.月份
+		order by  cast(replace(m.月份,'月','') as signed)
+	</select>
+
+	<select id="selectDevAmount" parameterType="java.util.Map" resultType="java.util.Map">
+		select  m.月份,
+		<foreach collection="devices"  item="item" separator=",">
+			MAX(CASE m.devname WHEN '${item.devname}' THEN m.jobamount ELSE 0 END ) '${item.devname}'
+		</foreach>
+		from  (select concat(month(pj.completetime),'月') as '月份',bd.devname,sum(amount) as jobamount
+		from produce_job pj join base_device bd on pj.devid=bd.devid
+		where year(pj.completetime) = '${year}'
+		group by month(pj.completetime),bd.devname )m
+		group by m.月份
+		order by  cast(replace(m.月份,'月','') as signed)
+	</select>
+
+	<select id="selectFlowConsume" parameterType="java.util.Map" resultType="java.util.Map">
+		select  m.月份,
+		<foreach collection="flows"  item="item" separator=",">
+			MAX(CASE m.flowname WHEN '${item.flowname}' THEN m.consume ELSE 0 END ) '${item.flowname}'
+		</foreach>
+		from  (select bf.flowname,concat(month(pr.completetime),'月') as '月份',
+		sum(round(
+		(ec.electric * (select es.ratio from  energy_standradcoal es where es.sid=1)) +
+		(ec.water * (select es.ratio from  energy_standradcoal es where es.sid=2)) +
+		(ec.oil * (select es.ratio from  energy_standradcoal es where es.sid=3)),2))as consume
+		from energy_consume ec
+		join produce_report pr on ec.reportid=pr.reportid
+		join base_flow bf on pr.flowid=bf.flowid
+		where year(pr.completetime) = '${year}'
+		group by bf.flowname,month(pr.completetime) )m
+		group by m.月份
+		order by  cast(replace(m.月份,'月','') as signed)
+	</select>
+
+
+	<select id="selectFlowdun" parameterType="java.util.Map" resultType="java.util.Map">
+select bf.flowname,sum(pr.capacity) as jobamount
+		from produce_report pr join base_flow bf on pr.flowid=bf.flowid
+		where year(pr.completetime) = '${year}'
+		and bf.compid='${compid}'
+		group by bf.flowname
+	</select>
+
+	<select id="findYear" parameterType="com.qhit.produceReport.pojo.ProduceReport" resultMap="list">
+select bc.compname as compname,sum(pr.capacity) as capacity
+from produce_report pr RIGHT join base_company bc
+on pr.compid=bc.compid
+and pr.compid='${compid}'
+and year(pr.startjobtime)='${startjobtime}'
+	</select>
+
+
+
+	<select id="usage" resultType="map" parameterType="map">
+		select m.港口名称,
+		max(m.斗轮机) as '斗轮机',
+		max(m.皮带机) as '皮带机',max(m.装船机) as '装船机'
+		from
+		(SELECT bc.compname as '港口名称',
+		round(sum(case bt.typename when '斗轮机' then pj.duration else 0 end)/(365*24*count(DISTINCT(bd.devid))),4) as '斗轮机',
+		round(sum(case bt.typename when '皮带机' then pj.duration else 0 end)/(365*24*count(DISTINCT(bd.devid))),4) as '皮带机',
+		round(sum(case bt.typename when '装船机' then pj.duration else 0 end)/(365*24*count(DISTINCT(bd.devid))),4) as '装船机'
+		from produce_job pj join base_device bd on pj.devid=bd.devid
+		join base_devtype bt on bd.typeid=bt.typeid
+		join base_company bc on bd.compid = bc.compid
+		where year(pj.starttime)=#{year}
+		group by bc.compname,bt.typename)m
+		group by m.港口名称
+
+	</select><select id="intactRatio" resultType="map" parameterType="map">
+	select m.港口名称,
+	max(m.斗轮机) as '斗轮机',
+	max(m.皮带机) as '皮带机',max(m.装船机) as '装船机'  from
+	(SELECT bc.compname as '港口名称',
+	round((sum(case bt.typename when '斗轮机' then pj.duration else 0 end)-sum(case bt.typename when '斗轮机' then IFNULL(pf.faulttime,0)/60 else 0 end) )/sum(case bt.typename when '斗轮机' then pj.duration else 0 end),4)  as '斗轮机',
+	round((sum(case bt.typename when '皮带机' then pj.duration else 0 end)-sum(case bt.typename when '皮带机' then IFNULL(pf.faulttime,0)/60 else 0 end) )/sum(case bt.typename when '皮带机' then pj.duration else 0 end),4)  as '皮带机',
+	round((sum(case bt.typename when '装船机' then pj.duration else 0 end)-sum(case bt.typename when '装船机' then IFNULL(pf.faulttime,0)/60 else 0 end) )/sum(case bt.typename when '装船机' then pj.duration else 0 end),4)  as '装船机'
+	from produce_job pj join base_device bd on pj.devid=bd.devid
+	join base_devtype bt on bd.typeid=bt.typeid
+	join base_company bc on bd.compid = bc.compid
+	left join produce_fault pf on pf.devid=bd.devid
+	where year(pj.starttime)=#{year}
+	group by bc.compname,bt.typename)m
+	group by m.港口名称
+
+</select><select id="cost" resultType="map" parameterType="map">
+	SELECT bd.devname,round(sum(pj.amount),2) as amount,
+	round(sum(
+	ec.electric*(SELECT es.ratio from energy_standradcoal es where es.sid=1)+
+	ec.water*(SELECT es.ratio from energy_standradcoal es where es.sid=2)+
+	ec.electric*(SELECT es.ratio from energy_standradcoal es where es.sid=3)
+	),2) as consume,
+	(select sum(IFNULL(pr.cost,0)) from produce_repair pr where pr.devid=bd.devid and year(pr.repairdate)=#{year} ) as cost
+	from base_device bd LEFT JOIN  produce_job pj on bd.devid=pj.devid
+	LEFT JOIN energy_consume ec on bd.devid=ec.devid
+	and pj.reportid=ec.reportid
+	where year(pj.completetime)=#{year}
+	and bd.compid=#{compid}
+	group by bd.devname
+</select><select id="amount" resultType="java.util.Map" parameterType="java.util.Map">
+	select m.港口名称,
+	max(m.斗轮机) as '斗轮机',
+	max(m.皮带机) as '皮带机',max(m.装船机) as '装船机'
+	from
+	(SELECT bc.compname as '港口名称',
+	round(sum(case bt.typename when '斗轮机' then pj.amount else 0 end),2) as '斗轮机',
+	round(sum(case bt.typename when '皮带机' then pj.amount else 0 end),2) as '皮带机',
+	round(sum(case bt.typename when '装船机' then pj.amount else 0 end),2) as '装船机'
+	from base_device bd join base_devtype bt on bd.typeid=bt.typeid
+	join produce_job pj on bd.devid=pj.devid
+	join base_company bc on bd.compid=bc.compid
+	where year(pj.starttime)=#{year}
+	group by bc.compname,bt.typename)m
+	group by m.港口名称
+</select><select id="consume" resultType="map" parameterType="map">
+	select m.港口名称,
+	max(m.斗轮机) as '斗轮机',
+	max(m.皮带机) as '皮带机',max(m.装船机) as '装船机'
+	from
+	(SELECT bc.compname as '港口名称',
+	round(sum(case bt.typename when '斗轮机' then ec.electric*(SELECT es.ratio from energy_standradcoal es where es.sid=1)+
+	ec.water*(SELECT es.ratio from energy_standradcoal es where es.sid=2)+
+	ec.electric*(SELECT es.ratio from energy_standradcoal es where es.sid=3) else 0 end),2) as '斗轮机',
+	round(sum(case bt.typename when '皮带机' then ec.electric*(SELECT es.ratio from energy_standradcoal es where es.sid=1)+
+	ec.water*(SELECT es.ratio from energy_standradcoal es where es.sid=2)+
+	ec.electric*(SELECT es.ratio from energy_standradcoal es where es.sid=3) else 0 end),2) as '皮带机',
+	round(sum(case bt.typename when '装船机' then ec.electric*(SELECT es.ratio from energy_standradcoal es where es.sid=1)+
+	ec.water*(SELECT es.ratio from energy_standradcoal es where es.sid=2)+
+	ec.electric*(SELECT es.ratio from energy_standradcoal es where es.sid=3) else 0 end),2) as '装船机'
+	from base_device bd join base_devtype bt on bd.typeid=bt.typeid
+	join energy_consume ec on bd.devid=ec.devid
+	join base_company bc on bd.compid=bc.compid
+	join produce_report pr on ec.reportid=pr.reportid
+	where year(pr.completetime)=#{year}
+	group by bc.compname,bt.typename)m
+	group by m.港口名称
+</select>
+
+</mapper> 

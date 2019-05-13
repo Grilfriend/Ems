@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.baseCompany.dao.IBaseCompanyDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.baseCompany.pojo.BaseCompany"> 
+		<id property="compid" column="compid" javaType="java.lang.Integer"></id> 
+		<result property="compname" column="compname" javaType="java.lang.String"></result> 
+		<result property="contacts" column="contacts" javaType="java.lang.String"></result> 
+		<result property="comptel" column="comptel" javaType="java.lang.String"></result> 
+		<result property="industry" column="industry" javaType="java.lang.String"></result> 
+		<result property="address" column="address" javaType="java.lang.String"></result>
+
+	</resultMap>
+
+
+	<resultMap id="finds" type="com.qhit.baseCompany.pojo.BaseCompany">
+		<id property="compid" column="compid" javaType="java.lang.Integer"></id>
+		<result property="compname" column="compname" javaType="java.lang.String"></result>
+		<result property="contacts" column="contacts" javaType="java.lang.String"></result>
+		<result property="comptel" column="comptel" javaType="java.lang.String"></result>
+		<result property="industry" column="industry" javaType="java.lang.String"></result>
+		<result property="address" column="address" javaType="java.lang.String"></result>
+<association property="produceReport" column="" javaType="com.qhit.produceReport.pojo.ProduceReport">
+	<result property="shipname" column="shipname" javaType="java.lang.String"></result>
+	<result property="capacity" column="capacity" javaType="java.lang.Float"></result>
+	<result property="planjobtime" column="planjobtime" javaType="java.lang.String"></result>
+	<result property="startjobtime" column="startjobtime" javaType="java.lang.String"></result>
+	<result property="completetime" column="completetime" javaType="java.lang.String"></result>
+	<result property="flowid" column="flowid" javaType="java.lang.Integer"></result>
+	<result property="reportuser" column="reportuser" javaType="java.lang.String"></result>
+	<result property="compid" column="compid" javaType="java.lang.Integer"></result>
+</association>
+		<association property="produceJob" column="" javaType="com.qhit.produceJob.pojo.ProduceJob">
+			<id property="jobid" column="jobid" javaType="java.lang.Integer"></id>
+			<result property="devid" column="devid" javaType="java.lang.Integer"></result>
+			<result property="starttime" column="starttime" javaType="java.lang.String"></result>
+			<result property="completetime" column="completetime" javaType="java.lang.String"></result>
+			<result property="duration" column="duration" javaType="java.lang.Double"></result>
+			<result property="amount" column="amount" javaType="java.lang.Double"></result>
+			<result property="reportid" column="reportid" javaType="java.lang.Integer"></result>
+		</association>
+	</resultMap>
+
+
+	<resultMap id="findcopnameen" type="com.qhit.baseCompany.pojo.BaseCompany">
+		<result property="electric" column="electric" javaType="java.lang.Double"></result>
+		<result property="water" column="water" javaType="java.lang.Double"></result>
+		<result property="oil" column="oil" javaType="java.lang.Double"></result>
+		<result property="compname" column="compname" javaType="java.lang.String"></result>
+	</resultMap>
+
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		compid,compname,contacts,comptel,industry,address 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_company 
+		where compid = #{compid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from base_company 
+		where compid = #{compid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.baseCompany.pojo.BaseCompany" > 
+		insert into base_company(compname,contacts,comptel,industry,address) 
+		values (#{compname},#{contacts},#{comptel},#{industry},#{address}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.baseCompany.pojo.BaseCompany" > 
+		update base_company 
+		<set > 
+			<if test="compname != null and compname!='' " > 
+				compname = #{compname}, 
+			</if> 
+			<if test="contacts != null and contacts!='' " > 
+				contacts = #{contacts}, 
+			</if> 
+			<if test="comptel != null and comptel!='' " > 
+				comptel = #{comptel}, 
+			</if> 
+			<if test="industry != null and industry!='' " > 
+				industry = #{industry}, 
+			</if> 
+			<if test="address != null and address!='' " > 
+				address = #{address}, 
+			</if> 
+		</set> 
+		where compid = #{compid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.baseCompany.pojo.BaseCompany" > 
+		update base_company 
+		set  compname = #{compname}, contacts = #{contacts}, comptel = #{comptel}, industry = #{industry}, address = #{address} 
+		where compid = #{compid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_company 
+	</select> 
+	<select id="findByCompname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_company 
+		where compname = #{compname} 
+	</select> 
+	<select id="findByContacts" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_company 
+		where contacts = #{contacts} 
+	</select> 
+	<select id="findByComptel" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_company 
+		where comptel = #{comptel} 
+	</select> 
+	<select id="findByIndustry" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_company 
+		where industry = #{industry} 
+	</select> 
+	<select id="findByAddress" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_company 
+		where address = #{address} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from base_company where compid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.baseCompany.pojo.BaseCompany" resultMap="BaseResultMap"> 
+		select * from  base_company 
+		<where > 
+			<if test="compname != null and compname!='' " > 
+				 and compname = #{compname} 
+			</if> 
+			<if test="contacts != null and contacts!='' " > 
+				 and contacts = #{contacts} 
+			</if> 
+			<if test="comptel != null and comptel!='' " > 
+				 and comptel = #{comptel} 
+			</if> 
+			<if test="industry != null and industry!='' " > 
+				 and industry = #{industry} 
+			</if> 
+			<if test="address != null and address!='' " > 
+				 and address = #{address} 
+			</if> 
+		</where> 
+	</select>
+	<select id="findcopnameen" resultMap="findcopnameen" parameterType="java.util.Map">
+		SELECT bc.compname,SUM(ec.electric) as electric,SUM(ec.water) as water,SUM(ec.oil) AS oil
+		FROM base_company bc
+		LEFT JOIN produce_report pr ON bc.compid=pr.compid
+		LEFT JOIN energy_consume ec ON pr.reportid=ec.reportid
+		WHERE bc.compid='${compid}'
+		AND YEAR(pr.completetime)='${year}'
+		GROUP BY bc.compname
+	</select>
+
+</mapper> 

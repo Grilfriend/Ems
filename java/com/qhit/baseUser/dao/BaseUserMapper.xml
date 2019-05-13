@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.baseUser.dao.IBaseUserDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.baseUser.pojo.BaseUser"> 
+		<id property="userid" column="userid" javaType="java.lang.Integer"></id> 
+		<result property="cname" column="cname" javaType="java.lang.String"></result> 
+		<result property="username" column="username" javaType="java.lang.String"></result> 
+		<result property="password" column="password" javaType="java.lang.String"></result> 
+		<result property="telno" column="telno" javaType="java.lang.String"></result> 
+		<result property="email" column="email" javaType="java.lang.String"></result> 
+		<result property="sex" column="sex" javaType="java.lang.String"></result> 
+		<result property="compid" column="compid" javaType="java.lang.Integer"></result>
+		<association property="baseCompany" javaType="com.qhit.baseCompany.pojo.BaseCompany">
+			<result property="address" column="address"></result>
+			<result property="industry" column="industry"></result>
+			<result property="comptel" column="comptel"></result>
+			<result property="compname" column="compname"></result>
+			<result property="contacts" column="contacts"></result>
+			<result property="compid" column="compid"></result>
+		</association>
+	</resultMap> 
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		userid,cname,username,password,telno,email,sex,compid 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_user 
+		where userid = #{userid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from base_user 
+		where userid = #{userid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.baseUser.pojo.BaseUser" > 
+		insert into base_user(cname,username,password,telno,email,sex,compid) 
+		values (#{cname},#{username},#{password},#{telno},#{email},#{sex},#{compid}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.baseUser.pojo.BaseUser" > 
+		update base_user 
+		<set > 
+			<if test="cname != null and cname!='' " > 
+				cname = #{cname}, 
+			</if> 
+			<if test="username != null and username!='' " > 
+				username = #{username}, 
+			</if> 
+			<if test="password != null and password!='' " > 
+				password = #{password}, 
+			</if> 
+			<if test="telno != null and telno!='' " > 
+				telno = #{telno}, 
+			</if> 
+			<if test="email != null and email!='' " > 
+				email = #{email}, 
+			</if> 
+			<if test="sex != null and sex!='' " > 
+				sex = #{sex}, 
+			</if> 
+			<if test="compid != null and compid!='' " > 
+				compid = #{compid}, 
+			</if> 
+		</set> 
+		where userid = #{userid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.baseUser.pojo.BaseUser" > 
+		update base_user 
+		set  cname = #{cname}, username = #{username}, password = #{password}, telno = #{telno}, email = #{email}, sex = #{sex}, compid = #{compid} 
+		where userid = #{userid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select *
+		from base_user bu join base_company bc on bu.compid = bc.compid
+	</select> 
+	<select id="findByCname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_user 
+		where cname = #{cname} 
+	</select> 
+	<select id="findByUsername" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_user 
+		where username = #{username} 
+	</select> 
+	<select id="findByPassword" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_user 
+		where password = #{password} 
+	</select> 
+	<select id="findByTelno" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_user 
+		where telno = #{telno} 
+	</select> 
+	<select id="findByEmail" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_user 
+		where email = #{email} 
+	</select> 
+	<select id="findBySex" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_user 
+		where sex = #{sex} 
+	</select> 
+	<select id="findByCompid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_user 
+		where compid = #{compid} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from base_user where userid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.baseUser.pojo.BaseUser" resultMap="BaseResultMap">
+		select *
+		from base_user bu join base_company bc on bu.compid = bc.compid
+		<where > 
+			<if test="cname != null and cname!='' " > 
+				 and bu.cname = #{cname}
+			</if> 
+			<if test="username != null and username!='' " > 
+				 and bu.username = #{username}
+			</if> 
+			<if test="password != null and password!='' " > 
+				 and bu.password = #{password}
+			</if> 
+			<if test="telno != null and telno!='' " > 
+				 and bu.telno = #{telno}
+			</if> 
+			<if test="email != null and email!='' " > 
+				 and bu.email = #{email}
+			</if> 
+			<if test="sex != null and sex!='' " > 
+				 and bu.sex = #{sex}
+			</if> 
+			<if test="compid != null and compid!='' " > 
+				 and bu.compid = #{compid}
+			</if> 
+		</where> 
+	</select> 
+</mapper> 

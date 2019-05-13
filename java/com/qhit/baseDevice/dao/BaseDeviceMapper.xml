@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.baseDevice.dao.IBaseDeviceDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.baseDevice.pojo.BaseDevice"> 
+		<id property="devid" column="devid" javaType="java.lang.Integer"></id> 
+		<result property="devname" column="devname" javaType="java.lang.String"></result> 
+		<result property="typeid" column="typeid" javaType="java.lang.Integer"></result> 
+		<result property="devdate" column="devdate" javaType="java.lang.String"></result> 
+		<result property="devuser" column="devuser" javaType="java.lang.String"></result> 
+		<result property="compid" column="compid" javaType="java.lang.Integer"></result> 
+	</resultMap>
+
+	<resultMap id="baseDeviceResultMap" type="com.qhit.baseDevice.pojo.BaseDevice">
+		<id property="devid" column="devid" javaType="java.lang.Integer"></id>
+		<result property="devdate" column="devdate"></result>
+		<result property="compid" column="compid"></result>
+		<result property="devname" column="devname"></result>
+		<result property="typeid" column="typeid"></result>
+		<result property="devuser" column="devuser"></result>
+		<association property="baseCompany" javaType="com.qhit.baseCompany.pojo.BaseCompany">
+			<result property="address" column="address"></result>
+			<result property="industry" column="industry"></result>
+			<result property="comptel" column="comptel"></result>
+			<result property="compname" column="compname"></result>
+			<result property="contacts" column="contacts"></result>
+		</association>
+		<association property="baseDevtype" javaType="com.qhit.baseDevtype.pojo.BaseDevtype">
+			<result property="typename" column="typename"></result>
+		</association>
+	</resultMap>
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		devid,devname,typeid,devdate,devuser,compid 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_device 
+		where devid = #{devid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from base_device 
+		where devid = #{devid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.baseDevice.pojo.BaseDevice" > 
+		insert into base_device(devname,typeid,devdate,devuser,compid) 
+		values (#{devname},#{typeid},#{devdate},#{devuser},#{compid}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.baseDevice.pojo.BaseDevice" > 
+		update base_device 
+		<set > 
+			<if test="devname != null and devname!='' " > 
+				devname = #{devname}, 
+			</if> 
+			<if test="typeid != null and typeid!='' " > 
+				typeid = #{typeid}, 
+			</if> 
+			<if test="devdate != null and devdate!='' " > 
+				devdate = #{devdate}, 
+			</if> 
+			<if test="devuser != null and devuser!='' " > 
+				devuser = #{devuser}, 
+			</if> 
+			<if test="compid != null and compid!='' " > 
+				compid = #{compid}, 
+			</if> 
+		</set> 
+		where devid = #{devid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.baseDevice.pojo.BaseDevice" > 
+		update base_device 
+		set  devname = #{devname}, typeid = #{typeid}, devdate = #{devdate}, devuser = #{devuser}, compid = #{compid} 
+		where devid = #{devid} 
+	</update> 
+	<select id="findAll" resultMap="baseDeviceResultMap" >
+		 select * from base_device
+	</select> 
+	<select id="findByDevname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" />
+		from base_device 
+		where devname = #{devname} 
+	</select> 
+	<select id="findByTypeid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_device 
+		where typeid = #{typeid} 
+	</select> 
+	<select id="findByDevdate" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_device 
+		where devdate = #{devdate} 
+	</select> 
+	<select id="findByDevuser" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_device 
+		where devuser = #{devuser} 
+	</select> 
+	<select id="findByCompid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_device 
+		where compid = #{compid} 
+	</select> 
+
+	<select id="search" parameterType="com.qhit.baseDevice.pojo.BaseDevice" resultMap="baseDeviceResultMap">
+		SELECT bd.*,bc.compname,bt.typename FROM base_device bd LEFT JOIN base_company bc ON bd.compid=bc.compid
+LEFT JOIN base_devtype bt ON bd.typeid=bt.typeid
+	</select> 
+</mapper> 

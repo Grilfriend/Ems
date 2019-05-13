@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.baseDevtype.dao.IBaseDevtypeDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.baseDevtype.pojo.BaseDevtype"> 
+		<id property="typeid" column="typeid" javaType="java.lang.Integer"></id> 
+		<result property="typename" column="typename" javaType="java.lang.String"></result> 
+	</resultMap> 
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		typeid,typename 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_devtype 
+		where typeid = #{typeid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from base_devtype 
+		where typeid = #{typeid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.baseDevtype.pojo.BaseDevtype" > 
+		insert into base_devtype(typename) 
+		values (#{typename}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.baseDevtype.pojo.BaseDevtype" > 
+		update base_devtype 
+		<set > 
+			<if test="typename != null and typename!='' " > 
+				typename = #{typename}, 
+			</if> 
+		</set> 
+		where typeid = #{typeid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.baseDevtype.pojo.BaseDevtype" > 
+		update base_devtype 
+		set  typename = #{typename} 
+		where typeid = #{typeid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_devtype 
+	</select> 
+	<select id="findByTypename" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_devtype 
+		where typename = #{typename} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from base_devtype where typeid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.baseDevtype.pojo.BaseDevtype" resultMap="BaseResultMap"> 
+		select * from  base_devtype 
+		<where > 
+			<if test="typename != null and typename!='' " > 
+				 and typename = #{typename} 
+			</if> 
+		</where> 
+	</select> 
+</mapper> 
